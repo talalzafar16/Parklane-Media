@@ -6,9 +6,9 @@ import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import { Block } from '@/components/system/block'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { capabilities } from '@/data/capabilities'
-import { cn } from '@/lib/utils'
 
 type FieldName = 'name' | 'email' | 'company' | 'service' | 'budget' | 'message'
 type Errors = Partial<Record<FieldName, string>>
@@ -147,9 +147,10 @@ export function ContactForm() {
 
   return (
     <form noValidate onSubmit={onSubmit} className="border border-border bg-white p-8 lg:p-10">
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-8 sm:grid-cols-2">
         <Field
           id="name"
+          index="01"
           label="Your name"
           required
           error={errors.name}
@@ -157,10 +158,12 @@ export function ContactForm() {
           onChange={(value) => setValue('name', value)}
           onBlur={() => onBlur('name')}
           autoComplete="name"
+          placeholder="Jane Ahmed"
         />
 
         <Field
           id="email"
+          index="02"
           label="Email address"
           type="email"
           required
@@ -169,10 +172,12 @@ export function ContactForm() {
           onChange={(value) => setValue('email', value)}
           onBlur={() => onBlur('email')}
           autoComplete="email"
+          placeholder="you@company.com"
         />
 
         <Field
           id="company"
+          index="03"
           label="Company"
           error={errors.company}
           value={values.company}
@@ -180,13 +185,11 @@ export function ContactForm() {
           onBlur={() => onBlur('company')}
           autoComplete="organization"
           optional
+          placeholder="Company name"
         />
 
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="service">
-            What do you need? <RequiredMark />
-          </Label>
-          <select
+        <FieldShell id="service" index="04" label="What do you need?" required error={errors.service}>
+          <Select
             id="service"
             name="service"
             value={values.service}
@@ -194,34 +197,29 @@ export function ContactForm() {
             onBlur={() => onBlur('service')}
             aria-invalid={errors.service ? 'true' : undefined}
             aria-describedby={errors.service ? 'service-error' : undefined}
-            className={cn(
-              'h-12 w-full border border-border bg-white px-4 text-body text-fg',
-              'transition-colors duration-200 ease-brand',
-              'focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25',
-              errors.service && 'border-red-600 focus-visible:ring-red-600/25',
-            )}
           >
-            <option value="">Select a service…</option>
+            <option value="">Select a capability…</option>
             {capabilities.map((capability) => (
               <option key={capability.slug} value={capability.title}>
-                {capability.title}
+                {`${capability.number} — ${capability.title}`}
               </option>
             ))}
             <option value="Something else">Something else</option>
-          </select>
-          <FieldError id="service-error" message={errors.service} />
-        </div>
+          </Select>
+        </FieldShell>
 
-        <div className="flex flex-col gap-2 sm:col-span-2">
-          <Label htmlFor="budget">
-            Approximate budget <span className="font-normal text-muted">(optional)</span>
-          </Label>
-          <select
+        <FieldShell
+          id="budget"
+          index="05"
+          label="Approximate budget"
+          optional
+          className="sm:col-span-2"
+        >
+          <Select
             id="budget"
             name="budget"
             value={values.budget}
             onChange={(event) => setValue('budget', event.target.value)}
-            className="h-12 w-full border border-border bg-white px-4 text-body text-fg transition-colors duration-200 ease-brand focus-visible:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
           >
             <option value="">Prefer not to say</option>
             {budgetOptions.map((option) => (
@@ -229,13 +227,18 @@ export function ContactForm() {
                 {option}
               </option>
             ))}
-          </select>
-        </div>
+          </Select>
+        </FieldShell>
 
-        <div className="flex flex-col gap-2 sm:col-span-2">
-          <Label htmlFor="message">
-            About the project <RequiredMark />
-          </Label>
+        <FieldShell
+          id="message"
+          index="06"
+          label="About the project"
+          required
+          error={errors.message}
+          hint="The more context you give, the more useful our first reply will be."
+          className="sm:col-span-2"
+        >
           <Textarea
             id="message"
             name="message"
@@ -246,23 +249,19 @@ export function ContactForm() {
             aria-describedby={errors.message ? 'message-error' : 'message-hint'}
             placeholder="What are you trying to achieve, and by when?"
           />
-          {errors.message ? (
-            <FieldError id="message-error" message={errors.message} />
-          ) : (
-            <p id="message-hint" className="text-small text-muted">
-              The more context you give, the more useful our first reply will be.
-            </p>
-          )}
-        </div>
+        </FieldShell>
       </div>
 
       {status === 'error' ? (
-        <p role="alert" className="mt-6 bg-red-50 px-4 py-3 text-small text-red-700">
+        <p
+          role="alert"
+          className="mt-8 border border-red-600 bg-red-50 px-4 py-3 text-small text-red-700"
+        >
           Something went wrong sending that. Please try again, or email us directly.
         </p>
       ) : null}
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-10 flex flex-col gap-4 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
         <Block type="submit" size="lg" disabled={status === 'submitting'}>
           {status === 'submitting' ? (
             <>
@@ -283,25 +282,62 @@ export function ContactForm() {
   )
 }
 
-function RequiredMark() {
-  return (
-    <span className="text-brand" aria-hidden="true">
-      *
-    </span>
-  )
-}
-
+/**
+ * Sentence case, not mono. The micro layer is for labels, counters and
+ * captions — a full sentence set in uppercase mono is noticeably slower to
+ * read, which is the opposite of what an error message needs to be.
+ */
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null
   return (
-    <p id={id} role="alert" className="text-small text-red-700">
+    <p id={id} role="alert" className="mt-2 text-small text-red-700">
       {message}
     </p>
   )
 }
 
+/** Label + control + message, so every field is spaced identically. */
+function FieldShell({
+  id,
+  index,
+  label,
+  required,
+  optional,
+  error,
+  hint,
+  className,
+  children,
+}: {
+  id: string
+  index: string
+  label: string
+  required?: boolean
+  optional?: boolean
+  error?: string
+  hint?: string
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={className}>
+      <Label htmlFor={id} index={index} required={required} optional={optional} className="mb-3">
+        {label}
+      </Label>
+      {children}
+      {error ? (
+        <FieldError id={`${id}-error`} message={error} />
+      ) : hint ? (
+        <p id={`${id}-hint`} className="mt-2 text-small text-muted">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
 type FieldProps = {
   id: FieldName
+  index: string
   label: string
   value: string
   onChange: (value: string) => void
@@ -311,10 +347,12 @@ type FieldProps = {
   required?: boolean
   optional?: boolean
   autoComplete?: string
+  placeholder?: string
 }
 
 function Field({
   id,
+  index,
   label,
   value,
   onChange,
@@ -324,26 +362,22 @@ function Field({
   required = false,
   optional = false,
   autoComplete,
+  placeholder,
 }: FieldProps) {
   return (
-    <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>
-        {label}{' '}
-        {required ? <RequiredMark /> : null}
-        {optional ? <span className="font-normal text-muted">(optional)</span> : null}
-      </Label>
+    <FieldShell id={id} index={index} label={label} required={required} optional={optional} error={error}>
       <Input
         id={id}
         name={id}
         type={type}
         value={value}
         autoComplete={autoComplete}
+        placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         onBlur={onBlur}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
       />
-      <FieldError id={`${id}-error`} message={error} />
-    </div>
+    </FieldShell>
   )
 }
