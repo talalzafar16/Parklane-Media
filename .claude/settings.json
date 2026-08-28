@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git -C d:\\\\parklanemedia status --short)",
+      "PowerShell(git -C d:\\\\parklanemedia branch -a)",
+      "PowerShell(git -C d:\\\\parklanemedia remote -v)",
+      "PowerShell(git -C d:\\\\parklanemedia log --oneline -5 2>$null)",
+      "PowerShell(npm install --prefix d:\\\\parklanemedia --no-audit --no-fund)"
+    ]
+  }
+}

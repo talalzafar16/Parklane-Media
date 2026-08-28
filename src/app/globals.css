@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Parklane Media — design tokens
+
+   The logo is a solid blue block with "PM" knocked out of it. That is the whole
+   language: solid blocks, knocked-out type, sharp corners. Broadcast furniture
+   — tickers, timecode labels, crop marks, hairline grids — sits on top of it.
+
+   Every colour is declared twice: a hex value for hand-written CSS, and bare
+   RGB channels so Tailwind's opacity modifiers keep working.
+   ========================================================================== */
+
+:root {
+  color-scheme: light; /* light theme only — the client does not want dark mode */
+
+  --brand: #1b5a8c;
+  --brand-dark: #0e3352;
+  --brand-tint: #eaf1f7;
+  --base: #f7f9fb;
+  --text: #1a1d21;
+  --muted: #6b7785;
+  --accent: #e9a23b;
+  --border: #e3e9ef;
+
+  /* Near-black. Used for exactly one full-bleed band ("Why Parklane") —
+     punctuation in the page rhythm, not a dark theme. */
+  --ink: #0a0f14;
+
+  /* Lightened brand blue, for brand-coloured text on dark surfaces only.
+     #1B5A8C on --ink measures ~2.0:1, which fails AA; this measures ~7.4:1. */
+  --brand-light: #8fc1e3;
+
+  --brand-rgb: 27 90 140;
+  --brand-dark-rgb: 14 51 82;
+  --brand-tint-rgb: 234 241 247;
+  --base-rgb: 247 249 251;
+  --text-rgb: 26 29 33;
+  --muted-rgb: 107 119 133;
+  --accent-rgb: 233 162 59;
+  --border-rgb: 227 233 239;
+  --ink-rgb: 10 15 20;
+  --brand-light-rgb: 143 193 227;
+
+  /* Sharp corners are the identity. Only form inputs soften, and only to 4px. */
+  --radius: 0px;
+  --radius-input: 4px;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-height: 76px;
+
+  /* Type scale. Display runs deliberately large — with no photography,
+     no client logos and no video, type and negative space carry the page. */
+  --fs-display: clamp(3.5rem, 8vw, 8rem);
+  --fs-h2: clamp(2.25rem, 4vw, 3.5rem);
+  --fs-h3: 1.5rem;
+  --fs-body: 17px;
+  --fs-micro: 12px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Sticky nav must not cover in-page anchor targets. */
+    scroll-padding-top: calc(var(--nav-height) + 24px);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-fg font-sans antialiased;
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-brand-dark;
+    /* Archivo is a variable font — the width axis is what gives the headings
+       their broadcast weight. Browsers without wdth support fall back to the
+       standard width rather than a faux stretch. */
+    font-stretch: 112%;
+    font-weight: 700;
+    /* Display type runs large enough that a single long word ("Entertainment")
+       can exceed a narrow column and force the whole page to scroll
+       horizontally. This breaks only when a word genuinely cannot fit. */
+    overflow-wrap: break-word;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* A single, consistent, clearly visible focus ring across the whole site. */
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+    border-radius: 0;
+  }
+
+  ::selection {
+    background: rgb(var(--brand-rgb) / 0.18);
+    color: var(--brand-dark);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+}
+
+@layer components {
+  /* Page shell: 1280px max, 24px gutters. */
+  .container-px {
+    @apply mx-auto w-full max-w-container px-6;
+  }
+
+  /* Section rhythm: 72px mobile → 128px desktop. */
+  .section-y {
+    @apply py-18 lg:py-32;
+  }
+
+  /* The mono layer. Section numbers, counters, eyebrows, form labels, captions
+     and breadcrumbs all use this — it is what separates the page from a
+     template, so it is defined once and reused everywhere. */
+  .micro {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+    font-size: var(--fs-micro);
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Tickers and the partner rail pause when a pointer or keyboard is on them. */
+  .marquee-track:hover,
+  .marquee-track:focus-within {
+    animation-play-state: paused;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — a hard override.
+   Framer Motion is disabled separately in JS (see src/lib/motion.ts); this
+   catches every CSS transition, animation and smooth scroll.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
