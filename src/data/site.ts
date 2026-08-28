@@ -142,12 +142,19 @@ export const officeDetails = {
 
 /**
  * WhatsApp floating button.
- * TODO: CLIENT — supply the WhatsApp business number (digits only, incl. country
- * code). While `number` is null the button is not rendered at all, so visitors
- * never hit a dead chat link.
+ *
+ * TODO: CLIENT — replace `number` with the real WhatsApp business number
+ * (digits only, including country code) BEFORE LAUNCH.
+ *
+ * The value below is a deliberate placeholder so the button is visible while
+ * the site is being reviewed. It is all zeros after the country code, which
+ * WhatsApp rejects as invalid — chosen precisely because it cannot connect to
+ * anyone. A plausible-looking dummy (e.g. 922134567890) would be far worse:
+ * if it shipped, it would send real enquiries to whichever stranger owns that
+ * number. Setting this back to `null` hides the button entirely.
  */
 export const whatsapp = {
-  number: null as string | null,
+  number: '920000000000' as string | null,
   message: 'Hi Parklane Media — I would like to talk about a project.',
 }
 

@@ -3,10 +3,10 @@ import { getWhatsAppHref } from '@/data/site'
 /**
  * Floating WhatsApp CTA.
  *
- * TODO: CLIENT — supply the WhatsApp business number in data/site.ts. Until
- * then this renders nothing: a floating button pointing at a made-up number
- * would be worse than no button at all. It appears automatically once the
- * number is set.
+ * TODO: CLIENT — supply the WhatsApp business number in data/site.ts. It is
+ * currently a placeholder that WhatsApp rejects as invalid, so the button is
+ * visible for review but cannot reach anyone. Set `whatsapp.number` to null
+ * there to hide the button again.
  *
  * Deliberately not a lucide icon — lucide has no WhatsApp glyph, and the brand
  * mark needs to be recognisable at 24px. Sits above page content but below the
