@@ -1,111 +1,108 @@
 import type { Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
 
-/**
- * Parklane Media design tokens.
- *
- * Every colour reads from a CSS variable in `src/app/globals.css`, so
- * rebranding is a single-file change. The `-rgb` variants hold bare channel
- * values so Tailwind's `/opacity` modifiers keep working (e.g. `bg-brand/10`).
- *
- * Light theme only — no `dark:` variants anywhere in this project.
- */
+// Colours live as RGB channels in globals.css so opacity modifiers work (bg-signal/20).
+const rgb = (name: string) => `rgb(var(--${name}-rgb) / <alpha-value>)`
+
 const config: Config = {
-  darkMode: [], // explicitly disabled: the client does not want a dark theme
   content: ['./src/**/*.{ts,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
-        brand: {
-          DEFAULT: 'rgb(var(--brand-rgb) / <alpha-value>)',
-          dark: 'rgb(var(--brand-dark-rgb) / <alpha-value>)',
-          tint: 'rgb(var(--brand-tint-rgb) / <alpha-value>)',
-          /* On-dark brand text only — see the note in globals.css. */
-          light: 'rgb(var(--brand-light-rgb) / <alpha-value>)',
+        canvas: rgb('canvas'),
+        surface: rgb('surface'),
+        raised: rgb('raised'),
+        ink: rgb('ink'),
+        muted: rgb('muted'),
+        silver: rgb('silver'),
+        signal: {
+          DEFAULT: rgb('signal'),
+          bright: rgb('signal-bright'),
         },
-        accent: 'rgb(var(--accent-rgb) / <alpha-value>)',
-        canvas: 'rgb(var(--base-rgb) / <alpha-value>)',
-        /* Body copy. Named `fg` so `ink` can be the near-black band colour. */
-        fg: 'rgb(var(--text-rgb) / <alpha-value>)',
-        /* The single full-bleed near-black band. */
-        ink: 'rgb(var(--ink-rgb) / <alpha-value>)',
-        muted: 'rgb(var(--muted-rgb) / <alpha-value>)',
-        border: 'rgb(var(--border-rgb) / <alpha-value>)',
+        line: {
+          DEFAULT: 'rgb(var(--ink-rgb) / 0.12)',
+          strong: 'rgb(var(--ink-rgb) / 0.24)',
+        },
       },
       fontFamily: {
-        // Body — Inter. Set on <body>; `font-sans` is the default everywhere.
-        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // Display — Archivo, variable width axis. Applied via `font-display`
-        // and to h1–h6 in globals.css.
-        display: ['var(--font-archivo)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // Micro layer — JetBrains Mono. Prefer the `.micro` component class.
-        mono: ['var(--font-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans: ['var(--font-outfit)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-barlow)', '"Arial Narrow"', 'ui-sans-serif', 'sans-serif'],
+        mono: ['var(--font-plex-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
+      // Keep in sync with the font-size list in src/lib/utils.ts.
       fontSize: {
-        micro: ['var(--fs-micro)', { lineHeight: '1.4', letterSpacing: '0.12em' }],
-        small: ['0.9375rem', { lineHeight: '1.6' }],
-        body: ['var(--fs-body)', { lineHeight: '1.7' }],
-        lead: ['clamp(1.125rem, 0.95rem + 0.6vw, 1.375rem)', { lineHeight: '1.6' }],
-        h4: ['1.125rem', { lineHeight: '1.35', fontWeight: '700' }],
-        h3: ['var(--fs-h3)', { lineHeight: '1.2', fontWeight: '700' }],
-        h2: ['var(--fs-h2)', { lineHeight: '1.05', letterSpacing: '-0.02em', fontWeight: '700' }],
-        display: [
-          'var(--fs-display)',
-          { lineHeight: '0.92', letterSpacing: '-0.03em', fontWeight: '700' },
-        ],
-      },
-      spacing: {
-        // The brand scale is 8/16/24/40/64/96/128 → 2/4/6/10/16/24/32 in
-        // Tailwind units (root stays at 16px). 18 = 72px, the mobile rhythm.
-        18: '4.5rem',
+        label: ['0.6875rem', { lineHeight: '1.4', letterSpacing: '0.14em' }],
+        small: ['0.875rem', { lineHeight: '1.55' }],
+        body: ['1rem', { lineHeight: '1.65' }],
+        lead: ['clamp(1.0625rem, 0.95rem + 0.45vw, 1.3125rem)', { lineHeight: '1.55' }],
+        title: ['clamp(1.375rem, 1.1rem + 1vw, 2.125rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        statement: ['clamp(2rem, 1.2rem + 3.2vw, 4.25rem)', { lineHeight: '1.04', letterSpacing: '-0.035em' }],
+        'display-md': ['clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem)', { lineHeight: '0.9', letterSpacing: '-0.01em' }],
+        'display-lg': ['clamp(2.75rem, 1.4rem + 4.4vw, 6.25rem)', { lineHeight: '0.88', letterSpacing: '-0.015em' }],
+        'display-xl': ['clamp(3.25rem, 1rem + 6.6vw, 8.5rem)', { lineHeight: '0.86', letterSpacing: '-0.02em' }],
       },
       maxWidth: {
-        container: '1280px',
-        copy: '68ch',
+        shell: '1600px',
       },
-      borderRadius: {
-        // Sharp corners are the identity. Only form inputs soften.
-        none: '0px',
-        DEFAULT: '0px',
-        sm: '0px',
-        md: '0px',
-        lg: '0px',
-        xl: '0px',
-        '2xl': '0px',
-        input: 'var(--radius-input)',
-        full: '9999px',
+      spacing: {
+        nav: 'var(--nav-offset)',
+        gutter: 'var(--gutter)',
+      },
+      transitionTimingFunction: {
+        brand: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       keyframes: {
         ticker: {
           from: { transform: 'translate3d(0, 0, 0)' },
           to: { transform: 'translate3d(-50%, 0, 0)' },
         },
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
+        pulse_ring: {
+          '0%': { transform: 'scale(0.35)', opacity: '0.9' },
+          '100%': { transform: 'scale(1)', opacity: '0' },
         },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
+        signal_travel: {
+          '0%': { transform: 'translateX(-10%)', opacity: '0' },
+          '15%, 85%': { opacity: '1' },
+          '100%': { transform: 'translateX(110%)', opacity: '0' },
         },
-        /* The oversized PM mark behind the hero: a 2–3px drift, nothing more. */
-        'mark-drift': {
-          '0%, 100%': { transform: 'translate3d(0, 0, 0)' },
-          '50%': { transform: 'translate3d(3px, -2px, 0)' },
+        blink: {
+          '0%, 55%': { opacity: '1' },
+          '56%, 100%': { opacity: '0.25' },
+        },
+        scan: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
+        },
+        progress: {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
         },
       },
       animation: {
-        ticker: 'ticker var(--ticker-duration, 40s) linear infinite',
-        'accordion-down': 'accordion-down 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
-        'accordion-up': 'accordion-up 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
-        'mark-drift': 'mark-drift 18s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        ticker: 'ticker var(--ticker-duration, 48s) linear infinite',
+        'pulse-ring': 'pulse_ring 3.2s cubic-bezier(0.22, 1, 0.36, 1) infinite',
+        'signal-travel': 'signal_travel 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        blink: 'blink 1.6s steps(1) infinite',
+        scan: 'scan 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        progress: 'progress var(--progress-duration, 7s) linear forwards',
       },
-      transitionTimingFunction: {
-        brand: 'cubic-bezier(0.22, 1, 0.36, 1)',
-      },
-      /* No boxShadow extensions: the design uses 1px hairlines, never shadows. */
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    // Clipped corners. Size with [--notch:2rem].
+    plugin(({ addUtilities }) => {
+      const n = 'var(--notch, 1.25rem)'
+      addUtilities({
+        '.notch': {
+          'clip-path': `polygon(0 0, calc(100% - ${n}) 0, 100% ${n}, 100% 100%, 0 100%)`,
+        },
+        '.bevel': {
+          'clip-path': `polygon(${n} 0, calc(100% - ${n}) 0, 100% ${n}, 100% calc(100% - ${n}), calc(100% - ${n}) 100%, ${n} 100%, 0 calc(100% - ${n}), 0 ${n})`,
+        },
+      })
+    }),
+  ],
 }
 
 export default config

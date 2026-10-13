@@ -1,164 +1,49 @@
-/**
- * Global site configuration: identity, contact routing, navigation, socials.
- *
- * Parklane Media is a new company. Anything the client has not yet confirmed is
- * left as `null` and rendered as a visible placeholder rather than invented —
- * see the `contactChannels` array below.
- */
+// Anything the client hasn't confirmed yet is null and shows as "To be confirmed".
 
 export const siteConfig = {
   name: 'Parklane Media',
   shortName: 'Parklane',
-  tagline: 'Connecting Brands, Audiences & Content',
+  tagline: 'Ideas that engage. Content that converts.',
   description:
-    'Parklane Media is a media, content, marketing and advertising company focused on creating meaningful connections between businesses, audiences and content.',
+    'Parklane Media is a full-service media, content and advertising agency — media production, commercial rights and sales, content creation, event branding and broadcast production.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://parklanemedia.com',
   locale: 'en_PK',
+  coordinates: '24.8607° N, 67.0011° E',
 } as const
 
-export type NavItem = {
-  label: string
-  href: string
-  children?: { label: string; href: string; description: string }[]
-}
+export type NavLink = { label: string; href: string }
 
-export const mainNav: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  {
-    label: 'Capabilities',
-    href: '/capabilities',
-    children: [
-      {
-        label: 'Content',
-        href: '/capabilities/content',
-        description:
-          "Create, acquire, develop, distribute and commercialise content for multi-platform audiences.",
-      },
-      {
-        label: 'Advertising',
-        href: '/capabilities/advertising',
-        description: 'Advertising solutions that reach the right audiences across platforms.',
-      },
-      {
-        label: 'Media & Marketing',
-        href: '/capabilities/media-marketing',
-        description: 'Media and marketing built around business objectives and audience behaviour.',
-      },
-      {
-        label: 'Digital & Social',
-        href: '/capabilities/digital-social',
-        description: 'A stronger presence across the digital ecosystem.',
-      },
-      {
-        label: 'Sports & Entertainment',
-        href: '/capabilities/sports-entertainment',
-        description: 'Commercial and content opportunities across sports and entertainment.',
-      },
-      {
-        label: 'Events & Activations',
-        href: '/capabilities/events-activations',
-        description: 'Experiences that bring brands closer to their audiences.',
-      },
-    ],
-  },
+export const mainNav: NavLink[] = [
+  { label: 'Services', href: '/services' },
   { label: 'Work', href: '/work' },
-  { label: 'Insights', href: '/insights' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'About', href: '/about' },
 ]
 
-export const footerNav = {
-  company: [
-    { label: 'About', href: '/about' },
-    { label: 'Our Work', href: '/work' },
-    { label: 'Insights', href: '/insights' },
-    { label: 'Contact', href: '/contact' },
-  ],
-  capabilities: [
-    { label: 'Content', href: '/capabilities/content' },
-    { label: 'Advertising', href: '/capabilities/advertising' },
-    { label: 'Media & Marketing', href: '/capabilities/media-marketing' },
-    { label: 'Digital & Social', href: '/capabilities/digital-social' },
-    { label: 'Sports & Entertainment', href: '/capabilities/sports-entertainment' },
-    { label: 'Events & Activations', href: '/capabilities/events-activations' },
-  ],
-}
+export const contactLink: NavLink = { label: 'Contact', href: '/contact' }
 
-/**
- * Routed contact points shown on /contact.
- *
- * `value: null` means the client has not supplied it yet. Every consumer
- * renders a visible "to be confirmed" placeholder in that case — nothing here
- * is guessed, and no fake mailto: link is ever produced.
- */
-export type ContactChannel = {
-  id: string
-  heading: string
-  description: string
-  icon: 'mail' | 'handshake' | 'megaphone' | 'map-pin'
-  value: string | null
-  href: string | null
-}
-
-export const contactChannels: ContactChannel[] = [
-  {
-    id: 'general',
-    heading: 'General Enquiries',
-    description: 'Questions about Parklane Media, or anything that does not fit the boxes below.',
-    icon: 'mail',
-    // TODO: CLIENT — supply the general enquiries email address.
-    value: null,
-    href: null,
-  },
-  {
-    id: 'partnerships',
-    heading: 'Business & Partnerships',
-    description: 'Content partnerships, commercial opportunities and new business.',
-    icon: 'handshake',
-    // TODO: CLIENT — supply the business & partnerships email address.
-    value: null,
-    href: null,
-  },
-  {
-    id: 'sales',
-    heading: 'Advertising & Media Sales',
-    description: 'Advertising enquiries, media planning, buying and sales.',
-    icon: 'megaphone',
-    // TODO: CLIENT — supply the advertising & media sales email address.
-    value: null,
-    href: null,
-  },
+export const companyNav: NavLink[] = [
+  { label: 'Work', href: '/work' },
+  { label: 'About', href: '/about' },
+  contactLink,
 ]
 
-export const officeDetails = {
-  heading: 'Office',
-  description: 'Where to find us.',
-  // TODO: CLIENT — supply the registered office address.
-  address: null as string | null,
-  // TODO: CLIENT — supply the main office telephone number.
+export const contactDetails = {
+  // TODO: CLIENT — confirm the enquiries inbox (taken from the designer handover).
+  email: 'info@parklanemedia.com' as string | null,
+  // TODO: CLIENT — office phone; phoneHref in E.164, e.g. +922100000000.
   phone: null as string | null,
   phoneHref: null as string | null,
+  location: 'Karachi / Worldwide',
 }
 
-/**
- * WhatsApp floating button.
- *
- * TODO: CLIENT — replace `number` with the real WhatsApp business number
- * (digits only, including country code) BEFORE LAUNCH.
- *
- * The value below is a deliberate placeholder so the button is visible while
- * the site is being reviewed. It is all zeros after the country code, which
- * WhatsApp rejects as invalid — chosen precisely because it cannot connect to
- * anyone. A plausible-looking dummy (e.g. 922134567890) would be far worse:
- * if it shipped, it would send real enquiries to whichever stranger owns that
- * number. Setting this back to `null` hides the button entirely.
- */
+// TODO: CLIENT — real WhatsApp business number (digits only, with country code).
+// The all-zero placeholder is invalid on purpose so it can't reach a stranger; null hides the button.
 export const whatsapp = {
   number: '920000000000' as string | null,
   message: 'Hi Parklane Media — I would like to talk about a project.',
 }
 
-export function getWhatsAppHref(): string | null {
+export function getWhatsAppHref() {
   if (!whatsapp.number) return null
   return `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(whatsapp.message)}`
 }
@@ -169,7 +54,7 @@ export type SocialLink = {
   icon: 'instagram' | 'facebook' | 'linkedin' | 'youtube'
 }
 
-// TODO: CLIENT — confirm or replace every social profile URL below.
+// TODO: CLIENT — confirm the social profile URLs.
 export const socials: SocialLink[] = [
   { label: 'Instagram', href: 'https://instagram.com/parklanemedia', icon: 'instagram' },
   { label: 'Facebook', href: 'https://facebook.com/parklanemedia', icon: 'facebook' },
@@ -177,5 +62,4 @@ export const socials: SocialLink[] = [
   { label: 'YouTube', href: 'https://youtube.com/@parklanemedia', icon: 'youtube' },
 ]
 
-/** Shown wherever a value is pending client confirmation. */
 export const PLACEHOLDER_LABEL = 'To be confirmed'

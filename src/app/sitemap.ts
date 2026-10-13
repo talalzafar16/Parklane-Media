@@ -1,52 +1,27 @@
 import type { MetadataRoute } from 'next'
 
-import { capabilities } from '@/data/capabilities'
+import { getServiceHref, services } from '@/data/services'
 import { siteConfig } from '@/data/site'
-import { posts } from '@/data/insights'
 import { projects } from '@/data/work'
 
-/**
- * Generated from the same data files that build the pages, so a new capability,
- * project or article appears in the sitemap the moment it is added — nothing to
- * remember to update by hand. `projects` and `posts` are currently empty, which
- * simply means no entries are emitted for them.
- */
+type Entry = MetadataRoute.Sitemap[number]
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date()
-
-  const staticRoutes = [
-    { path: '/', priority: 1, changeFrequency: 'monthly' as const },
-    { path: '/about', priority: 0.8, changeFrequency: 'yearly' as const },
-    { path: '/capabilities', priority: 0.9, changeFrequency: 'monthly' as const },
-    { path: '/work', priority: 0.8, changeFrequency: 'monthly' as const },
-    { path: '/insights', priority: 0.8, changeFrequency: 'weekly' as const },
-    { path: '/contact', priority: 0.7, changeFrequency: 'yearly' as const },
-  ]
+  const entry = (path: string, priority: number, changeFrequency: Entry['changeFrequency']): Entry => ({
+    url: path === '/' ? siteConfig.url : `${siteConfig.url}${path}`,
+    lastModified,
+    changeFrequency,
+    priority,
+  })
 
   return [
-    ...staticRoutes.map((route) => ({
-      url: route.path === '/' ? siteConfig.url : `${siteConfig.url}${route.path}`,
-      lastModified,
-      changeFrequency: route.changeFrequency,
-      priority: route.priority,
-    })),
-    ...capabilities.map((capability) => ({
-      url: `${siteConfig.url}/capabilities/${capability.slug}`,
-      lastModified,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    })),
-    ...projects.map((project) => ({
-      url: `${siteConfig.url}/work/${project.slug}`,
-      lastModified,
-      changeFrequency: 'yearly' as const,
-      priority: 0.7,
-    })),
-    ...posts.map((post) => ({
-      url: `${siteConfig.url}/insights/${post.slug}`,
-      lastModified: new Date(post.date),
-      changeFrequency: 'yearly' as const,
-      priority: 0.6,
-    })),
+    entry('/', 1, 'monthly'),
+    entry('/services', 0.9, 'monthly'),
+    entry('/about', 0.8, 'yearly'),
+    entry('/work', 0.8, 'monthly'),
+    entry('/contact', 0.7, 'yearly'),
+    ...services.map((service) => entry(getServiceHref(service), 0.8, 'monthly')),
+    ...projects.map((project) => entry(`/work/${project.slug}`, 0.7, 'yearly')),
   ]
 }

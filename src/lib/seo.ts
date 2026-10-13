@@ -1,38 +1,28 @@
 import type { Metadata } from 'next'
 
+import type { Service } from '@/data/services'
 import { siteConfig } from '@/data/site'
 
 type BuildMetadataOptions = {
   title: string
   description: string
-  /** Route path, e.g. "/work/vertex-motors-launch". Used for the canonical URL. */
   path?: string
-  /** Path to an OG image under /public. Defaults to the site-wide card. */
   image?: string
   imageAlt?: string
   type?: 'website' | 'article'
   noIndex?: boolean
 }
 
-/**
- * One metadata builder for every page, so titles, canonicals, Open Graph and
- * Twitter cards can never drift apart. `metadataBase` is set once in the root
- * layout, which is what lets the relative image paths below resolve.
- */
 export function buildMetadata({
   title,
   description,
   path = '/',
-  image = '/og.webp',
-  imageAlt = `${siteConfig.name} — ${siteConfig.tagline}`,
+  image = '/og.jpg',
+  imageAlt = siteConfig.name,
   type = 'website',
   noIndex = false,
 }: BuildMetadataOptions): Metadata {
-  const url = path === '/' ? siteConfig.url : `${siteConfig.url}${path}`
-
-  // The page <title> gets "| Parklane Media" appended by the root template, but
-  // the homepage title already carries the brand name — appending it to the
-  // social card too would read "Parklane Media — … | Parklane Media".
+  // The root layout's title template adds the brand to <title>; social cards need it added here.
   const socialTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`
 
   return {
@@ -43,7 +33,7 @@ export function buildMetadata({
     openGraph: {
       title: socialTitle,
       description,
-      url,
+      url: path,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
       type,
@@ -58,14 +48,47 @@ export function buildMetadata({
   }
 }
 
-/** Organization schema, injected once on the homepage. */
+const absoluteUrl = (path: string) => (path === '/' ? siteConfig.url : `${siteConfig.url}${path}`)
+
 export function organizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.jpeg`,
+    logo: absoluteUrl('/icon-512.png'),
     description: siteConfig.description,
+  }
+}
+
+export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  }
+}
+
+export function serviceJsonLd(service: Service, path: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.summary,
+    url: absoluteUrl(path),
+    provider: { '@type': 'Organization', name: siteConfig.name, url: siteConfig.url },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: `${service.title} capabilities`,
+      itemListElement: service.capabilities.map((capability) => ({
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: capability.title, description: capability.description },
+      })),
+    },
   }
 }

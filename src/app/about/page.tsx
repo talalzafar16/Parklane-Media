@@ -1,112 +1,162 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
-import { CapabilityIcon } from '@/components/brand/capability-icon'
-import { RevealGroup, RevealItem } from '@/components/motion/reveal'
-import { CtaBand } from '@/components/shared/cta-band'
-import { PageHero } from '@/components/shared/page-hero'
-import { WhyParklane } from '@/components/home/why-parklane'
-import { Block } from '@/components/system/block'
+import { SignalStop } from '@/components/broadcast/signal-stop'
+import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal'
+import { PartnerStrip } from '@/components/proof/partner-strip'
+import { ProofGrid } from '@/components/proof/proof-grid'
 import { Container, Section } from '@/components/ui/container'
-import { SectionHeading } from '@/components/ui/section-heading'
-import { aboutIntro } from '@/data/about'
-import { capabilities } from '@/data/capabilities'
+import { Eyebrow } from '@/components/ui/eyebrow'
+import { Icon } from '@/components/ui/icon'
+import { IndexCard } from '@/components/ui/index-card'
+import { companyStory, connect, manifesto, principles } from '@/data/about'
+import { whyParklane } from '@/data/why-parklane'
 import { buildMetadata } from '@/lib/seo'
+import { padIndex } from '@/lib/utils'
 
 export const metadata: Metadata = buildMetadata({
   title: 'About',
-  description:
-    'Parklane Media is a media, content, marketing and advertising company focused on creating meaningful connections between businesses, audiences and content.',
+  description: companyStory.paragraphs[0],
   path: '/about',
 })
 
-/**
- * About.
- *
- * The previous version carried an invented founding story, four fictional team
- * members, a "values" list and a set of unverifiable statistics. All of it has
- * been removed — this page now says only what the client has actually told us.
- */
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow={aboutIntro.eyebrow}
-        title={aboutIntro.heading}
-        description={aboutIntro.paragraphs[0]}
-      />
+      <Manifesto />
 
-      <Section tone="canvas" aria-labelledby="about-body-heading">
-        <Container>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-4">
-              <SectionHeading
-                id="about-body-heading"
-                eyebrow="Who we are"
-                title="One team across media, content and marketing"
-              />
-            </div>
-
-            <div className="space-y-6 lg:col-span-7 lg:col-start-6">
-              {aboutIntro.paragraphs.map((paragraph) => (
-                <p key={paragraph.slice(0, 32)} className="max-w-copy text-lead text-muted">
-                  {paragraph}
-                </p>
+      <Section ruled aria-labelledby="story-heading">
+        <Container className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+          <Reveal className="lg:col-span-4">
+            <Eyebrow>{companyStory.eyebrow}</Eyebrow>
+            <h2 id="story-heading" className="display mt-6 text-display-md">
+              {companyStory.heading}
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1} className="space-y-6 lg:col-span-7 lg:col-start-6">
+            {companyStory.paragraphs.map((paragraph, index) => (
+              <p key={paragraph.slice(0, 24)} className={index === 0 ? 'text-title' : 'text-lead text-muted'}>
+                {paragraph}
+              </p>
+            ))}
+            <dl className="!mt-12">
+              {connect.facts.map((fact) => (
+                <div key={fact.label} className="grid gap-2 border-t border-line py-5 sm:grid-cols-[9rem_1fr]">
+                  <dt className="label pt-0.5 text-signal-bright">{fact.label}</dt>
+                  <dd className="text-ink">{fact.items.join(' · ')}</dd>
+                </div>
               ))}
-            </div>
-          </div>
+            </dl>
+          </Reveal>
         </Container>
       </Section>
 
-      <WhyParklane />
-
-      {/* Capability summary, so /about closes with something actionable. */}
-      <Section tone="canvas" aria-labelledby="about-capabilities-heading">
+      <Section tone="surface" aria-labelledby="why-heading">
         <Container>
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <SectionHeading
-              id="about-capabilities-heading"
-              eyebrow="What we do"
-              title="Six capabilities, one team"
-              className="sm:max-w-2xl"
-            />
-            <Block asChild variant="outline" className="shrink-0">
-              <Link href="/capabilities">
-                All capabilities
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Block>
-          </div>
-
-          <RevealGroup as="ul" className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilities.map((capability) => (
-              <RevealItem as="li" key={capability.slug} className="h-full">
-                <Link
-                  href={`/capabilities/${capability.slug}`}
-                  className="group flex h-full flex-col border border-border bg-white p-8 transition-[transform,border-color] duration-300 ease-brand hover:-translate-y-1.5 hover:border-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-4 motion-reduce:hover:translate-y-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="font-display text-h3 font-bold tabular-nums text-brand/25"
-                      aria-hidden="true"
-                    >
-                      {capability.number}
-                    </span>
-                    <span className="inline-flex size-12 items-center justify-center bg-brand-tint text-brand transition-colors duration-300 ease-brand group-hover:bg-brand group-hover:text-white">
-                      <CapabilityIcon name={capability.icon} />
-                    </span>
-                  </div>
-                  <h3 className="mt-8 text-h3">{capability.title}</h3>
-                  <p className="mt-4 flex-1 text-body text-muted">{capability.description}</p>
-                </Link>
+          <Reveal>
+            <Eyebrow>Why Parklane</Eyebrow>
+            <h2 id="why-heading" className="display mt-6 text-display-md">
+              Six reasons, one team
+            </h2>
+          </Reveal>
+          <RevealGroup as="ul" className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {whyParklane.map((reason, index) => (
+              <RevealItem as="li" key={reason.title}>
+                <IndexCard index={padIndex(index + 1)} icon={reason.icon} title={reason.title} description={reason.description} tone="canvas" />
               </RevealItem>
             ))}
           </RevealGroup>
         </Container>
       </Section>
 
-      <CtaBand />
+      <Section aria-labelledby="proof-heading-about">
+        <Container>
+          <h2 id="proof-heading-about" className="sr-only">
+            Partners and proof of impact
+          </h2>
+          <Reveal>
+            <PartnerStrip />
+          </Reveal>
+          <Reveal delay={0.1} className="mt-14">
+            <ProofGrid />
+          </Reveal>
+        </Container>
+      </Section>
     </>
+  )
+}
+
+function Manifesto() {
+  return (
+    <section aria-labelledby="manifesto-heading" className="relative isolate overflow-hidden pb-20 pt-[calc(var(--nav-offset)+3.5rem)] lg:pb-28 lg:pt-[calc(var(--nav-offset)+6rem)]">
+      <div aria-hidden="true" className="rhythm-lines absolute inset-0 -z-20" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-y-0 right-0 -z-10 hidden w-[42%] lg:block"
+        style={{ clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0 100%)' }}
+      >
+        <Image
+          src="/images/services/media-production.webp"
+          alt=""
+          fill
+          priority
+          sizes="42vw"
+          className="scale-[1.6] object-cover object-[70%_50%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-canvas/60 to-transparent" />
+      </div>
+
+      <Container className="grid gap-14 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <Reveal>
+            <Eyebrow marker="/">{manifesto.eyebrow}</Eyebrow>
+            <h1
+              id="manifesto-heading"
+              className="mt-8 max-w-[12ch] font-sans text-[clamp(3.25rem,1.5rem+6.5vw,8.5rem)] font-bold leading-[0.92] tracking-[-0.045em]"
+            >
+              {manifesto.heading}
+              <SignalStop />
+            </h1>
+          </Reveal>
+
+          <div className="mt-16 grid gap-12 md:grid-cols-2">
+            <Reveal className="space-y-5">
+              <span aria-hidden="true" className="block h-6 w-px origin-bottom-left rotate-[30deg] bg-signal-bright" />
+              {manifesto.body.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)} className="max-w-[46ch] font-mono text-small text-ink/85">
+                  {paragraph}
+                </p>
+              ))}
+            </Reveal>
+
+            <RevealGroup as="ul" className="border-t border-line">
+              {principles.map((principle, index) => (
+                <RevealItem as="li" key={principle.key} className="flex items-center gap-5 border-b border-line py-5">
+                  <Icon name={principle.icon} className="size-6 shrink-0 text-signal-bright" />
+                  <div>
+                    <p className="label text-muted">
+                      {padIndex(index + 1)} / <span className="text-signal-bright">{principle.key}</span>
+                    </p>
+                    <p className="mt-1 text-lead text-ink">{principle.title}</p>
+                  </div>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+        </div>
+
+        <Reveal delay={0.2} className="self-end lg:col-span-3 lg:col-start-10">
+          <p className="label text-signal-bright">{manifesto.principle.label}</p>
+          <span aria-hidden="true" className="mt-3 block h-px w-4 bg-signal-bright" />
+          <p className="mt-3 font-mono text-small text-ink">
+            {manifesto.principle.lines.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </p>
+        </Reveal>
+      </Container>
+    </section>
   )
 }

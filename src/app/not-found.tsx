@@ -1,49 +1,49 @@
 import Link from 'next/link'
-import { ArrowRight, Home } from 'lucide-react'
 
-import { Block } from '@/components/system/block'
+import { ArrowLine, Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
-import { mainNav } from '@/data/site'
+import { Eyebrow } from '@/components/ui/eyebrow'
+import { contactLink, mainNav } from '@/data/site'
+
+// Faint test-card bars behind the 404.
+const BARS = ['bg-silver', 'bg-muted', 'bg-signal-bright', 'bg-signal', 'bg-raised', 'bg-surface', 'bg-ink']
 
 export default function NotFound() {
   return (
-    <section className="flex min-h-[70svh] items-center bg-brand-tint pb-24 pt-[calc(var(--nav-height)+4rem)]">
+    <section className="relative flex min-h-[85svh] items-center overflow-hidden pb-24 pt-[calc(var(--nav-offset)+4rem)]">
+      <div aria-hidden="true" className="absolute inset-0 -z-10 flex opacity-[0.07]">
+        {BARS.map((bar) => (
+          <span key={bar} className={`h-full flex-1 ${bar}`} />
+        ))}
+      </div>
+
       <Container>
-        <div className="max-w-2xl">
-          <p className="micro text-brand">Error 404</p>
-
-          <h1 className="mt-4 text-h2">This page has left the edit</h1>
-
-          <p className="mt-6 max-w-copy text-lead text-muted">
-            The link is broken or the page has moved. Nothing you did — here are the places worth
-            going instead.
+        <div className="max-w-3xl">
+          <Eyebrow marker="404">No signal</Eyebrow>
+          <h1 className="display mt-6 text-display-xl">Signal lost.</h1>
+          <p className="mt-8 max-w-[44ch] text-lead text-ink/85">
+            The link is broken or the page has moved. Here are the channels still broadcasting.
           </p>
 
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Block asChild size="lg">
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Button asChild size="lg">
               <Link href="/">
-                <Home aria-hidden="true" />
                 Back to home
+                <ArrowLine />
               </Link>
-            </Block>
-            <Block asChild size="lg" variant="outline">
-              <Link href="/work">
-                See our work
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Block>
+            </Button>
+            <Button asChild size="lg" variant="bracket">
+              <Link href={contactLink.href}>{contactLink.label}</Link>
+            </Button>
           </div>
 
-          <nav aria-label="Site sections" className="mt-16 border-t border-border pt-8">
-            <h2 className="micro text-muted">All pages</h2>
-            <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-              {mainNav.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="inline-flex min-h-[44px] items-center text-body text-brand transition-colors duration-200 ease-brand hover:text-brand-dark"
-                  >
-                    {item.label}
+          <nav aria-label="Site sections" className="mt-16 border-t border-line pt-8">
+            <ul className="label flex flex-wrap gap-x-8 gap-y-3">
+              {mainNav.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-muted transition-colors hover:text-signal-bright">
+                    <span aria-hidden="true" className="text-signal-bright">{'// '}</span>
+                    {link.label}
                   </Link>
                 </li>
               ))}

@@ -1,43 +1,34 @@
 import type { Metadata, Viewport } from 'next'
-import { Archivo, Inter, JetBrains_Mono } from 'next/font/google'
+import type { ReactNode } from 'react'
+import { Barlow_Condensed, IBM_Plex_Mono, Outfit } from 'next/font/google'
 
-import { BackgroundGrid } from '@/components/system/background-grid'
 import { Footer } from '@/components/layout/footer'
 import { Navbar } from '@/components/layout/navbar'
 import { RouteProgress } from '@/components/layout/route-progress'
 import { WhatsAppButton } from '@/components/layout/whatsapp-button'
+import { JsonLd } from '@/components/seo/json-ld'
 import { siteConfig } from '@/data/site'
 import { organizationJsonLd } from '@/lib/seo'
 
 import './globals.css'
 
-/**
- * Three faces, self-hosted by next/font at build time — no render-blocking
- * request to Google, and no layout shift thanks to the size-adjusted fallback.
- *
- * Archivo carries the display type. It is loaded as a variable font including
- * the width axis, which is what lets the headings run expanded without a faux
- * stretch. JetBrains Mono is the micro layer — section numbers, counters,
- * eyebrows, captions and breadcrumbs.
- */
-const inter = Inter({
+const barlow = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-barlow',
+  display: 'swap',
+})
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+})
+
+const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const archivo = Archivo({
-  subsets: ['latin'],
-  axes: ['wdth'],
-  variable: '--font-archivo',
-  display: 'swap',
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-mono',
+  variable: '--font-plex-mono',
   display: 'swap',
 })
 
@@ -53,13 +44,15 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   keywords: [
-    'media company',
-    'content production',
-    'advertising agency',
-    'media planning and buying',
-    'digital and social media',
-    'sports and entertainment media',
-    'events and brand activations',
+    'media production',
+    'commercial rights and sales',
+    'sponsorship',
+    'content creation',
+    'event branding',
+    'broadcast production',
+    'OTT strategy',
+    'live streaming',
+    'Pakistan media agency',
   ],
   formatDetection: { telephone: true, address: false, email: true },
   openGraph: {
@@ -69,24 +62,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
-    images: [
-      {
-        url: '/og.webp',
-        width: 1200,
-        height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
-      },
-    ],
+    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: siteConfig.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
-    images: ['/og.webp'],
-  },
-  icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    images: ['/og.jpg'],
   },
   robots: {
     index: true,
@@ -96,60 +78,41 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1B5A8C',
-  colorScheme: 'light',
+  themeColor: '#08131D',
+  colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${archivo.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="en" className={`${barlow.variable} ${outfit.variable} ${plexMono.variable}`}>
       <head>
-        {/*
-          Scroll reveals render at opacity 0 and are brought in by Framer Motion.
-          If JavaScript never runs, this makes every one of them visible rather
-          than leaving the page blank.
-        */}
+        {/* Reveals start at opacity 0; keep them visible if JS never runs. */}
         <noscript>
-          {/* eslint-disable-next-line react/no-danger */}
           <style
-            dangerouslySetInnerHTML={{
-              __html: '[data-reveal]{opacity:1!important;transform:none!important}',
-            }}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: '[data-reveal]{opacity:1!important;transform:none!important}' }}
           />
         </noscript>
       </head>
-      <body className="min-h-screen bg-canvas font-sans text-body text-fg">
+      <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[70] focus:inline-flex focus:h-12 focus:items-center focus:bg-brand focus:px-6 focus:font-display focus:text-[0.9375rem] focus:font-bold focus:text-white"
+          className="label sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:inline-flex focus:h-12 focus:items-center focus:bg-signal focus:px-6 focus:text-ink"
         >
           Skip to main content
         </a>
 
-        {/* Hairline column rules behind everything — the Swiss structure the
-            rest of the page is set against. */}
-        <BackgroundGrid />
-
         <RouteProgress />
         <Navbar />
 
-        <main id="main" className="relative z-10">
-          {children}
-        </main>
+        <main id="main">{children}</main>
 
         <Footer />
         <WhatsAppButton />
 
-        <script
-          type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
-        />
+        <JsonLd data={organizationJsonLd()} />
       </body>
     </html>
   )

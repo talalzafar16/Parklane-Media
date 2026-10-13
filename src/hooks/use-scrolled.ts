@@ -2,11 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-/**
- * True once the page has scrolled past `threshold` px.
- * Listener is passive and rAF-throttled so it never blocks scrolling.
- */
-export function useScrolled(threshold = 80): boolean {
+export function useScrolled(threshold = 80) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -16,10 +12,8 @@ export function useScrolled(threshold = 80): boolean {
       frame = 0
       setScrolled(window.scrollY > threshold)
     }
-
     const onScroll = () => {
-      if (frame) return
-      frame = window.requestAnimationFrame(read)
+      if (!frame) frame = window.requestAnimationFrame(read)
     }
 
     read()

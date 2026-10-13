@@ -1,84 +1,32 @@
-import Image from 'next/image'
-
 import { siteConfig } from '@/data/site'
 import { cn } from '@/lib/utils'
 
-/** Intrinsic size of /public/logo.jpeg. Update both if the artwork changes. */
-const LOGO_WIDTH = 860
-const LOGO_HEIGHT = 160
+// Vector version of the supplied logo for dark backgrounds: blue PM tile with the
+// letters knocked out, wordmark in Outfit (the same geometric sans).
+export function Logo({ variant = 'inline', className }: { variant?: 'inline' | 'mark'; className?: string }) {
+  const markOnly = variant === 'mark'
 
-type LogoProps = {
-  /** Rendered height in px. The nav shrinks this from 34 → 30 on scroll. */
-  height?: number
-  /**
-   * `raster` uses the supplied /public/logo.jpeg.
-   * `vector` draws the PM mark and sets the wordmark in Archivo — no baked-in
-   * background, so it sits cleanly on any surface.
-   *
-   * TODO: CLIENT — once a transparent SVG lockup is supplied, point `raster` at
-   * it and the `vector` variant can be retired.
-   */
-  variant?: 'raster' | 'vector'
-  priority?: boolean
-  className?: string
-}
-
-export function Logo({ height = 40, variant = 'raster', priority = false, className }: LogoProps) {
-  if (variant === 'vector') return <VectorLockup height={height} className={className} />
-
-  const width = Math.round((height * LOGO_WIDTH) / LOGO_HEIGHT)
-
-  return (
-    <span className={cn('inline-flex', className)}>
-      <Image
-        src="/logo.jpeg"
-        alt={`${siteConfig.name} logo`}
-        width={width}
-        height={height}
-        priority={priority}
-        className="object-contain transition-[height] duration-300 ease-brand"
-        // Height drives the size and width follows the intrinsic ratio. Both are
-        // set inline: `h-full`-style classes here would leave next/image warning
-        // that one dimension is CSS-modified and the other is not.
-        style={{ height, width: 'auto' }}
-      />
-    </span>
-  )
-}
-
-/**
- * Mark + wordmark, drawn rather than loaded.
- *
- * The supplied artwork is a JPEG with white baked in, which reads as a pale box
- * on the `--base` footer. This draws the same lockup with no background at all.
- */
-function VectorLockup({ height, className }: { height: number; className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-3', className)}>
       <svg
-        viewBox="0 0 112 112"
-        role="img"
-        aria-label={`${siteConfig.name} logo`}
-        className="shrink-0 text-brand"
-        style={{ height, width: height }}
-        fill="currentColor"
+        viewBox="0 0 512 512"
+        role={markOnly ? 'img' : undefined}
+        aria-label={markOnly ? siteConfig.name : undefined}
+        aria-hidden={markOnly ? undefined : true}
+        className="h-[1.9em] w-[1.9em] shrink-0"
       >
-        <rect width="112" height="112" />
-        <path
-          d="M26 28h24a17 17 0 0 1 0 34H37v22H26z M37 39v12h13a6 6 0 0 0 0-12z"
-          fill="#FFFFFF"
-          fillRule="evenodd"
-        />
-        <path d="M68 84V28h11l10 20 10-20h11v56H99V51l-10 19-10-19v33z" fill="#FFFFFF" />
+        <rect width="512" height="512" rx="104" className="fill-signal" />
+        <g transform="translate(256 256) scale(0.84) translate(-283 -256)" className="fill-ink">
+          <path d="M86 130h121c58 0 94 31 94 82 0 52-37 84-96 84h-55v86H86V130Zm64 53v61h51c23 0 36-10 36-31 0-20-13-30-36-30h-51Z" />
+          <path d="M284 130h55l43 77 43-77h55v252h-61V237l-37 65h-2l-36-64v144h-60V130Z" />
+        </g>
       </svg>
 
-      <span
-        aria-hidden="true"
-        className="font-display font-bold leading-none text-brand-dark"
-        style={{ fontSize: height * 0.62, letterSpacing: '-0.01em' }}
-      >
-        Parklane <span className="text-brand">Media</span>
-      </span>
+      {markOnly ? null : (
+        <span className="whitespace-nowrap font-sans text-[1.25em] font-semibold leading-none tracking-[-0.02em] text-ink">
+          Parklane <span className="font-medium text-signal-bright">Media</span>
+        </span>
+      )}
     </span>
   )
 }

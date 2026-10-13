@@ -1,145 +1,170 @@
+import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 
 import { Logo } from '@/components/brand/logo'
-import { Block } from '@/components/system/block'
-import { Ticker } from '@/components/system/ticker'
-import { PLACEHOLDER_LABEL, footerNav, officeDetails, siteConfig, socials } from '@/data/site'
+import { RadarPulse } from '@/components/broadcast/radar-pulse'
+import { Magnetic } from '@/components/motion/magnetic'
+import { ArrowLine, Button } from '@/components/ui/button'
+import { finale } from '@/data/home'
+import { getServiceHref, services } from '@/data/services'
+import {
+  PLACEHOLDER_LABEL,
+  companyNav,
+  contactDetails,
+  contactLink,
+  siteConfig,
+  socials,
+} from '@/data/site'
 
-const socialIcons = {
-  instagram: Instagram,
-  facebook: Facebook,
-  linkedin: Linkedin,
-  youtube: Youtube,
-} as const
+const socialIcons = { instagram: Instagram, facebook: Facebook, linkedin: Linkedin, youtube: Youtube }
 
-/**
- * Ticker, one asymmetric link band, then a mono meta bar.
- *
- * The identity column carries the real wordmark at nav scale — an oversized PM
- * mark here left a large dead area beside it and pulled attention away from the
- * links, which are the reason anyone looks at a footer.
- */
 export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-border bg-canvas">
-      <Ticker />
+    <footer className="relative overflow-hidden border-t border-line bg-canvas">
+      <TransmissionBar />
 
-      <div className="container-px py-16 lg:py-20">
-        <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-12">
-          {/* Identity */}
-          <div className="sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-flex" aria-label={`${siteConfig.name} — home`}>
-              {/* Vector lockup: the raster asset has white baked in, which
-                  shows as a pale box against --base. */}
-              <Logo variant="vector" height={30} />
-            </Link>
-
-            <p className="mt-6 max-w-[34ch] text-body text-muted">
-              A media, content, marketing and advertising company connecting brands, audiences and
-              content.
-            </p>
-
-            <div className="mt-8">
-              <h2 className="micro text-muted">Office</h2>
-              {/* TODO: CLIENT — supply the registered office address. */}
-              {officeDetails.address ? (
-                <address className="mt-3 not-italic text-body text-fg">
-                  {officeDetails.address}
-                </address>
-              ) : (
-                <p className="micro mt-3 inline-flex border border-dashed border-border px-3 py-2 text-muted">
-                  {PLACEHOLDER_LABEL}
-                </p>
-              )}
-            </div>
-
-            <Block asChild size="sm" className="mt-8">
-              <Link href="/contact">
-                Let&rsquo;s Talk
-                <ArrowRight aria-hidden="true" />
-              </Link>
-            </Block>
-          </div>
-
-          {/* Company */}
-          <nav aria-labelledby="footer-company" className="lg:col-span-2 lg:col-start-6">
-            <h2 id="footer-company" className="micro text-muted">
-              Company
-            </h2>
-            <ul className="mt-5 border-t border-border">
-              {footerNav.company.map((link) => (
-                <li key={link.href} className="border-b border-border">
-                  <Link
-                    href={link.href}
-                    className="flex min-h-[44px] items-center text-body text-fg transition-colors duration-200 ease-brand hover:text-brand"
+      <div className="shell grid gap-12 border-t border-line py-16 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        <div className="sm:col-span-2 lg:col-span-4">
+          <Link href="/" aria-label={`${siteConfig.name} — home`} className="inline-flex text-base">
+            <Logo />
+          </Link>
+          <p className="mt-6 max-w-[34ch] text-small text-muted">{siteConfig.tagline}</p>
+          <ul className="mt-8 flex gap-2">
+            {socials.map((social) => {
+              const Icon = socialIcons[social.icon]
+              return (
+                <li key={social.label}>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex size-11 items-center justify-center border border-line text-muted transition-colors hover:border-signal-bright hover:text-signal-bright"
                   >
-                    {link.label}
-                  </Link>
+                    <Icon aria-hidden="true" strokeWidth={1.5} className="size-[18px]" />
+                    <span className="sr-only">{social.label} (opens in a new tab)</span>
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Capabilities */}
-          <nav aria-labelledby="footer-capabilities" className="lg:col-span-3 lg:col-start-8">
-            <h2 id="footer-capabilities" className="micro text-muted">
-              Capabilities
-            </h2>
-            <ul className="mt-5 border-t border-border">
-              {footerNav.capabilities.map((link) => (
-                <li key={link.href} className="border-b border-border">
-                  <Link
-                    href={link.href}
-                    className="flex min-h-[44px] items-center text-body text-fg transition-colors duration-200 ease-brand hover:text-brand"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Connect */}
-          <nav aria-labelledby="footer-connect" className="lg:col-span-2 lg:col-start-11">
-            <h2 id="footer-connect" className="micro text-muted">
-              Connect
-            </h2>
-            <ul className="mt-5 border-t border-border">
-              {socials.map((social) => {
-                const Icon = socialIcons[social.icon]
-                return (
-                  <li key={social.label} className="border-b border-border">
-                    {/* TODO: CLIENT — confirm or replace this social profile URL. */}
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex min-h-[44px] items-center gap-3 text-body text-fg transition-colors duration-200 ease-brand hover:text-brand"
-                    >
-                      <Icon className="size-[18px] shrink-0" aria-hidden="true" />
-                      {social.label}
-                      <span className="sr-only"> (opens in a new tab)</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
+              )
+            })}
+          </ul>
         </div>
+
+        <FooterColumn title="Services" className="lg:col-span-3 lg:col-start-5">
+          {services.map((service) => (
+            <FooterLink key={service.slug} href={getServiceHref(service)}>
+              {service.title}
+            </FooterLink>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title="Company" className="lg:col-span-2">
+          {companyNav.map((link) => (
+            <FooterLink key={link.href} href={link.href}>
+              {link.label}
+            </FooterLink>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title="Contact" className="lg:col-span-3">
+          <li>
+            {contactDetails.email ? (
+              <a
+                href={`mailto:${contactDetails.email}`}
+                className="break-words text-small text-ink transition-colors hover:text-signal-bright"
+              >
+                {contactDetails.email}
+              </a>
+            ) : (
+              <span className="text-small text-muted">{PLACEHOLDER_LABEL}</span>
+            )}
+          </li>
+          <li className="text-small text-ink">
+            {contactDetails.phone && contactDetails.phoneHref ? (
+              <a href={`tel:${contactDetails.phoneHref}`} className="hover:text-signal-bright">
+                {contactDetails.phone}
+              </a>
+            ) : (
+              <span className="text-muted">Phone · {PLACEHOLDER_LABEL}</span>
+            )}
+          </li>
+          <li className="text-small text-ink">{contactDetails.location}</li>
+        </FooterColumn>
       </div>
 
-      {/* Meta bar */}
-      <div className="border-t border-border">
-        <div className="container-px flex flex-col gap-2 py-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="micro text-muted">
-            © {year} {siteConfig.name} — All rights reserved
+      <div className="border-t border-line">
+        <div className="shell label flex flex-col gap-3 py-6 text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-ink">{siteConfig.name}</p>
+          <p className="tabular-nums">{siteConfig.coordinates}</p>
+          <p className="text-signal-bright">
+            © {year} {siteConfig.name}
           </p>
-          <p className="micro text-muted">Karachi, Pakistan</p>
         </div>
       </div>
     </footer>
+  )
+}
+
+function TransmissionBar() {
+  return (
+    <div className="shell relative grid items-center gap-12 py-20 lg:grid-cols-12 lg:py-28">
+      <h2 className="display relative z-10 text-display-xl lg:col-span-8">
+        {finale.heading.lead}
+        <br />
+        <span className="text-signal-bright">{finale.heading.emphasis}</span> {finale.heading.trail}
+      </h2>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[22%] top-1/2 hidden w-[min(28vw,420px)] -translate-y-1/2 lg:block"
+      >
+        <span className="absolute right-1/2 top-1/2 h-px w-[60vw] bg-gradient-to-r from-transparent to-signal-bright/60" />
+        <RadarPulse className="w-full opacity-80" />
+      </div>
+
+      <div className="relative z-10 lg:col-span-3 lg:col-start-10">
+        <p className="max-w-[36ch] text-small text-muted">{finale.body}</p>
+        <Magnetic className="mt-8">
+          <Button asChild size="lg">
+            <Link href={`${contactLink.href}#enquiry`}>
+              <span className="label text-[0.75rem]">[ {finale.cta} ]</span>
+              <ArrowLine />
+            </Link>
+          </Button>
+        </Magnetic>
+      </div>
+    </div>
+  )
+}
+
+function FooterColumn({
+  title,
+  className,
+  children,
+}: {
+  title: string
+  className?: string
+  children: ReactNode
+}) {
+  return (
+    <div className={className}>
+      <h2 className="label text-signal-bright">
+        <span aria-hidden="true">{'// '}</span>
+        {title}
+      </h2>
+      <ul className="mt-5 space-y-3">{children}</ul>
+    </div>
+  )
+}
+
+function FooterLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <li>
+      <Link href={href} className="text-small text-ink transition-colors hover:text-signal-bright">
+        {children}
+      </Link>
+    </li>
   )
 }

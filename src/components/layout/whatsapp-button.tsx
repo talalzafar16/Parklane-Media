@@ -1,22 +1,5 @@
 import { getWhatsAppHref } from '@/data/site'
 
-/**
- * Floating WhatsApp CTA.
- *
- * TODO: CLIENT — supply the WhatsApp business number in data/site.ts. It is
- * currently a placeholder that WhatsApp rejects as invalid, so the button is
- * visible for review but cannot reach anyone. Set `whatsapp.number` to null
- * there to hide the button again.
- *
- * Deliberately not a lucide icon — lucide has no WhatsApp glyph, and the brand
- * mark needs to be recognisable at 24px. Sits above page content but below the
- * mobile menu overlay (z-30 vs the sheet's z-50).
- *
- * Round, with a speech-bubble tail at the bottom-right — the one place on the
- * site that breaks the sharp-corner rule. A chat affordance is a platform
- * convention people recognise by shape before they read it, and a square green
- * box does not read as "message us".
- */
 export function WhatsAppButton() {
   const href = getWhatsAppHref()
   if (!href) return null
@@ -26,26 +9,10 @@ export function WhatsAppButton() {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group fixed bottom-6 right-6 z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white transition-transform duration-200 ease-brand hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas motion-reduce:transition-none motion-reduce:hover:scale-100"
+      className="group fixed bottom-6 right-6 z-30 inline-flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white transition-transform duration-200 ease-brand hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-canvas motion-reduce:hover:scale-100"
     >
-      {/*
-        Speech-bubble tail, drawn as a triangle rather than built from a box.
-
-        A square — rotated or not — gives a blunt 90° corner with visible steps
-        where its straight edges cross the circle. This puts the two base points
-        *inside* the circle (radius 26 of 28) so the shapes fuse with no seam,
-        and tapers to a single apex on the bottom-right diagonal.
-
-        The viewBox is 72 wide for a 56px button, offset by -8px on every side,
-        so the apex has room to sit outside the circle without needing
-        `overflow: visible`. Painted before the glyph, so it stays behind it.
-      */}
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 72 72"
-        className="pointer-events-none absolute -inset-2 size-[72px]"
-        fill="#25D366"
-      >
+      {/* Speech-bubble tail; its base sits inside the circle so the two shapes fuse. */}
+      <svg aria-hidden="true" viewBox="0 0 72 72" className="pointer-events-none absolute -inset-2 size-[72px]" fill="#25D366">
         <path d="M59.6 47 L64.6 64.6 L47 59.6 Z" />
       </svg>
 

@@ -1,21 +1,9 @@
-/**
- * "Why Parklane" — the six differentiators shown on the homepage and /about.
- *
- * Replaces the earlier invented four-step process. All copy is the client's.
- */
-
-export type WhyReasonIcon =
-  | 'layers'
-  | 'users'
-  | 'trending-up'
-  | 'monitor-smartphone'
-  | 'lightbulb'
-  | 'rocket'
+import type { IconName } from '@/lib/icons'
 
 export type WhyReason = {
   title: string
   description: string
-  icon: WhyReasonIcon
+  icon: IconName
 }
 
 export const whyParklane: WhyReason[] = [
