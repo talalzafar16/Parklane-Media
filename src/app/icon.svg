@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Parklane Media">
-  <rect width="512" height="512" rx="88" fill="#08131D"/>
-  <path fill="#F2F6F8" d="M86 130h121c58 0 94 31 94 82 0 52-37 84-96 84h-55v86H86V130Zm64 53v61h51c23 0 36-10 36-31 0-20-13-30-36-30h-51Z"/>
-  <path fill="#166C9F" d="M284 130h55l43 77 43-77h55v252h-61V237l-37 65h-2l-36-64v144h-60V130Z"/>
-  <path fill="#166C9F" d="M63 408h386v14H63z"/>
-</svg>
