@@ -15,3 +15,16 @@ export const contactLink = { label: 'Contact us', href: '#contact' }
 
 // TODO: CLIENT — confirm the inbox enquiries should go to.
 export const contactEmail = 'info@parklanemedia.com'
+
+export type SocialLink = {
+  label: string
+  href: string
+  icon: 'instagram' | 'x' | 'facebook' | 'youtube'
+}
+
+export const socials: SocialLink[] = [
+  { label: 'Instagram', href: 'https://www.instagram.com/parklane_media/', icon: 'instagram' },
+  { label: 'X', href: 'https://x.com/media_parklane', icon: 'x' },
+  { label: 'Facebook', href: 'https://www.facebook.com/parklanemedia', icon: 'facebook' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@ParklaneMedia', icon: 'youtube' },
+]

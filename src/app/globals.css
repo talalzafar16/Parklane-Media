@@ -15,7 +15,7 @@
   }
 
   html {
-    @apply bg-navy;
+    @apply relative bg-navy; /* relative: framer-motion measures scroll offsets against it */
     color-scheme: dark;
     scroll-behavior: smooth;
     scroll-padding-top: 7rem;

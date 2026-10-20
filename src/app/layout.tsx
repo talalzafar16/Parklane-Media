@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import { Barlow_Condensed, IBM_Plex_Mono, Outfit } from 'next/font/google'
 
-import { siteConfig } from '@/data/site'
+import { siteConfig, socials } from '@/data/site'
 
 import './globals.css'
 
@@ -51,6 +51,7 @@ const organizationJsonLd = {
   url: siteConfig.url,
   logo: `${siteConfig.url}/icon-512.png`,
   description: siteConfig.description,
+  sameAs: socials.map((social) => social.href),
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
