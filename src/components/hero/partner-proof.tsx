@@ -25,7 +25,8 @@ export function PartnerProof() {
           <p className="mb-3 text-center font-mono text-[.6rem] uppercase leading-[normal] tracking-[.13em] text-muted">
             Partner showcase · proposed references for client approval
           </p>
-          <ul className="grid grid-cols-7 gap-4 mobile:grid-cols-4 mobile:gap-x-2 mobile:gap-y-4">
+          {/* One equal-width row for however many partners there are; four per row on mobile. */}
+          <ul className="grid auto-cols-[minmax(0,1fr)] grid-flow-col gap-4 mobile:grid-flow-row mobile:grid-cols-4 mobile:gap-x-2 mobile:gap-y-4">
             {partners.map((partner) => (
               <li key={partner.name} className="flex min-h-12 min-w-0 flex-col items-center justify-center gap-2">
                 <Image

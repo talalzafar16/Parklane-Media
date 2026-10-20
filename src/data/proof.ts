@@ -2,11 +2,14 @@ import type { StaticImageData } from 'next/image'
 
 import bigbash from '@/assets/partners/bigbash.png'
 import fifa from '@/assets/partners/fifa.webp'
+import icc from '@/assets/partners/icc.png'
+import ilt20 from '@/assets/partners/ilt20.png'
 import myco from '@/assets/partners/myco.webp'
 import pcb from '@/assets/partners/pcb.png'
 import psl from '@/assets/partners/psl.png'
 import ptv from '@/assets/partners/ptv.png'
 import tamasha from '@/assets/partners/tamasha.png'
+import tapmad from '@/assets/partners/tapmad.png'
 
 export type Partner = {
   name: string
@@ -16,7 +19,8 @@ export type Partner = {
   crop?: boolean
 }
 
-// Artwork supplied by the client on 21 Sep 2026. Original colours are preserved.
+// PTV to Big Bash: artwork supplied by the client (21 Sep 2026). Tapmad, ICC and ILT20: official
+// logos from tapmad.com and Wikipedia/Commons, added at the client's request. Original colours kept.
 export const partners: Partner[] = [
   { name: 'PTV', logo: ptv },
   { name: 'TAMASHA', logo: tamasha },
@@ -25,6 +29,9 @@ export const partners: Partner[] = [
   { name: 'FIFA', logo: fifa, crop: true },
   { name: 'PCB', logo: pcb },
   { name: 'BIG BASH', logo: bigbash },
+  { name: 'TAPMAD', logo: tapmad },
+  { name: 'ICC', logo: icc },
+  { name: 'ILT20', logo: ilt20 },
 ]
 
 // TODO: CLIENT — the quotes and the shared attribution are drafts awaiting approval;

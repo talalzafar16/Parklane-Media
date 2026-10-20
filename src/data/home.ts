@@ -34,7 +34,7 @@ export const about = {
   facts: [
     {
       label: 'Experience',
-      value: 'ICC · FIFA · FIH · International cricket · PSL · Champions League · EPL · F1 · Big Bash',
+      value: 'ICC · FIFA · FIH · International cricket · PSL · Champions League · EPL · F1 · Big Bash · ILT20',
     },
     { label: 'Delivery', value: 'Concept · Production · Promotion' },
   ],

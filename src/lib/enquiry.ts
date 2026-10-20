@@ -1,5 +1,3 @@
-// Shared by the enquiry form and /api/contact.
-
 export type Enquiry = {
   name: string
   phone: string
