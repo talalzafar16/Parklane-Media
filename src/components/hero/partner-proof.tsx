@@ -39,7 +39,7 @@ export function PartnerProof() {
                   alt={partner.name}
                   sizes="104px"
                 />
-                <span className="text-[clamp(.7rem,1.2vw,1.1rem)] font-semibold leading-[normal] tracking-[.04em]" aria-hidden="true">
+                <span className="whitespace-nowrap text-[clamp(.7rem,1.2vw,1.1rem)] font-semibold leading-[normal] tracking-[.04em]" aria-hidden="true">
                   {partner.name}
                 </span>
               </li>

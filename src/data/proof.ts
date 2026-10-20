@@ -1,5 +1,6 @@
 import type { StaticImageData } from 'next/image'
 
+import apex from '@/assets/partners/apex.png'
 import bigbash from '@/assets/partners/bigbash.png'
 import fifa from '@/assets/partners/fifa.webp'
 import icc from '@/assets/partners/icc.png'
@@ -14,13 +15,14 @@ import tapmad from '@/assets/partners/tapmad.png'
 export type Partner = {
   name: string
   logo: StaticImageData
-  // MYCO's white lettering needs a dark tile; FIFA's artwork has extra padding to crop.
+  // MYCO's and APEX's white lettering needs a dark tile; FIFA's artwork has extra padding to crop.
   dark?: boolean
   crop?: boolean
 }
 
 // PTV to Big Bash: artwork supplied by the client (21 Sep 2026). Tapmad, ICC and ILT20: official
-// logos from tapmad.com and Wikipedia/Commons, added at the client's request. Original colours kept.
+// logos from tapmad.com and Wikipedia/Commons, added at the client's request. APEX: wordmark cut out
+// of the client's avatar image (20 Oct 2026). Original colours kept.
 export const partners: Partner[] = [
   { name: 'PTV', logo: ptv },
   { name: 'TAMASHA', logo: tamasha },
@@ -32,6 +34,7 @@ export const partners: Partner[] = [
   { name: 'TAPMAD', logo: tapmad },
   { name: 'ICC', logo: icc },
   { name: 'ILT20', logo: ilt20 },
+  { name: 'APEX', logo: apex, dark: true },
 ]
 
 // TODO: CLIENT — the quotes and the shared attribution are drafts awaiting approval;
