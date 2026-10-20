@@ -2,7 +2,7 @@
   "name": "parklane-media",
   "version": "1.0.0",
   "private": true,
-  "description": "Parklane Media website \u2014 media production, commercial rights, content creation, event branding and broadcast production.",
+  "description": "Parklane Media website — media production, commercial rights, content creation, event branding and broadcast production.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,31 +11,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@radix-ui/react-accordion": "^1.2.1",
-    "@radix-ui/react-dialog": "^1.1.2",
-    "@radix-ui/react-dropdown-menu": "^2.1.2",
-    "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
-    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.11.17",
     "lucide-react": "^0.462.0",
     "next": "^14.2.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.5.5"
+    "tailwind-merge": "^2.6.1"
   },
   "devDependencies": {
     "@types/node": "^20.17.9",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.6.1",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.20",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.31",
     "sharp": "^0.33.5",
-    "tailwindcss": "^3.4.15",
-    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.7.2"
   },
   "engines": {

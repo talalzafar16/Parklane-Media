@@ -2,104 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-
-  --canvas-rgb: 8 19 29; /* #08131D */
-  --surface-rgb: 14 32 48; /* #0E2030 */
-  --raised-rgb: 20 42 61; /* #142A3D */
-  --ink-rgb: 242 246 248; /* #F2F6F8 */
-  --muted-rgb: 143 164 178; /* #8FA4B2 */
-  --silver-rgb: 229 234 237; /* #E5EAED */
-  --signal-rgb: 22 108 159; /* #166C9F — fills */
-  --signal-bright-rgb: 61 155 224; /* #3D9BE0 — text on dark */
-
-  --gutter: clamp(1.25rem, 4.5vw, 5rem);
-  --nav-offset: 6.5rem;
-}
-
 @layer base {
-  * {
-    @apply border-line;
+  :root {
+    --pm-navy-rgb: 8 19 29; /* #08131d */
+    --pm-surface-rgb: 14 32 48; /* #0e2030 */
+    --pm-accent-rgb: 22 108 159; /* #166c9f */
+    --pm-ink-rgb: 242 246 248; /* #f2f6f8 */
+    --pm-silver-rgb: 229 234 237; /* #e5eaed */
+    --pm-muted: #a0b1bb;
+    --pm-line: rgb(242 246 248 / 0.2);
+    --pm-gutter: clamp(1.25rem, 5vw, 6rem);
   }
 
   html {
-    @apply bg-canvas;
+    @apply bg-navy;
+    color-scheme: dark;
     scroll-behavior: smooth;
-    scroll-padding-top: var(--nav-offset);
-    -webkit-text-size-adjust: 100%;
-    /* clip, not hidden — hidden makes a scroll container and breaks the sticky film stage */
+    scroll-padding-top: 7rem;
+    /* clip, not hidden: hidden creates a scroll container and breaks the sticky hero stage */
     overflow-x: clip;
   }
 
   body {
-    @apply bg-canvas font-sans text-body text-ink antialiased;
+    @apply min-h-screen min-w-[320px] bg-navy font-sans text-ink antialiased;
     overflow-x: clip;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    overflow-wrap: break-word;
-  }
-
-  p {
-    text-wrap: pretty;
-  }
-
-  :focus-visible {
-    outline: 2px solid rgb(var(--signal-bright-rgb));
-    outline-offset: 3px;
-  }
-
   ::selection {
-    background: rgb(var(--signal-rgb));
-    color: rgb(var(--ink-rgb));
+    @apply bg-accent text-ink;
   }
 
-  input,
-  textarea,
-  select,
-  button {
-    font: inherit;
-  }
-}
-
-@layer components {
-  .shell {
-    @apply mx-auto w-full max-w-shell px-gutter;
-  }
-
-  .section-y {
-    @apply py-24 lg:py-36;
-  }
-
-  .label {
-    @apply font-mono text-label font-normal uppercase;
-  }
-
-  .display {
-    @apply font-display font-semibold uppercase;
-  }
-
-  .rhythm-lines {
-    background-image: linear-gradient(to right, rgb(var(--ink-rgb) / 0.06) 1px, transparent 1px);
-    background-size: calc((100% - 2 * var(--gutter)) / 4) 100%;
-    background-position: var(--gutter) 0;
-    background-repeat: repeat-x;
-  }
-
-  .dot-grid {
-    background-image: radial-gradient(rgb(var(--ink-rgb) / 0.08) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-}
-
-@layer utilities {
-  .marquee-track:hover,
-  .marquee-track:focus-within {
-    animation-play-state: paused;
+  a:focus-visible,
+  button:focus-visible {
+    @apply outline outline-2 outline-offset-[6px] outline-accent;
   }
 }
 
@@ -111,10 +46,8 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
   }
 }

@@ -1,57 +1,49 @@
-import { SignalGauge } from '@/components/broadcast/signal-gauge'
-import { Reveal, RevealGroup, RevealItem } from '@/components/motion/reveal'
-import { Container, Section } from '@/components/ui/container'
+import { Camera, Flag, Handshake, PenTool, Radio, type LucideIcon } from 'lucide-react'
+
 import { Eyebrow } from '@/components/ui/eyebrow'
-import { servicesIntro } from '@/data/home'
-import { getServiceHref, services } from '@/data/services'
-import { cn } from '@/lib/utils'
+import { services, type Service } from '@/data/services'
 
-import { ServiceBand } from './service-band'
-
-type ServicesIndexProps = {
-  // `chapter` links to the homepage chapter, `page` to /services/[slug].
-  linkTo: 'chapter' | 'page'
-  headingLevel?: 'h1' | 'h2'
-  className?: string
+const icons: Record<Service['icon'], LucideIcon> = {
+  camera: Camera,
+  handshake: Handshake,
+  'pen-tool': PenTool,
+  flag: Flag,
+  radio: Radio,
 }
 
-export function ServicesIndex({ linkTo, headingLevel = 'h2', className }: ServicesIndexProps) {
-  const Heading = headingLevel
-
+export function ServicesIndex() {
   return (
-    <Section id="services" aria-labelledby="services-heading" className={cn('overflow-hidden', className)}>
-      <Container className="grid gap-14 lg:grid-cols-12 lg:gap-10">
-        <Reveal className="lg:col-span-4">
-          <div className="lg:sticky lg:top-[calc(var(--nav-offset)+2.5rem)]">
-            <Eyebrow marker={null}>{servicesIntro.eyebrow}</Eyebrow>
-            <Heading
-              id="services-heading"
-              className="mt-6 font-sans text-[clamp(2.5rem,1.4rem+2.3vw,3.75rem)] font-semibold leading-[1.02] tracking-[-0.035em]"
-            >
-              {servicesIntro.heading.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-              <span className="block text-signal-bright">{servicesIntro.emphasis}</span>
-            </Heading>
-            <p className="mt-8 max-w-[34ch] text-lead text-ink/85">{servicesIntro.body}</p>
-            <span aria-hidden="true" className="mt-10 block h-px w-14 bg-signal-bright" />
-            <SignalGauge className="-ml-[18%] mt-12 hidden max-w-[24rem] lg:block" />
-          </div>
-        </Reveal>
+    <section className="px-gutter pb-24 pt-20 mobile:py-14" id="work">
+      <header className="mb-8 flex items-end justify-between mobile:flex-col mobile:items-start mobile:gap-4" id="services">
+        <Eyebrow className="m-0">What we offer</Eyebrow>
+        <h2 className="font-display text-[clamp(3rem,7vw,7rem)] font-medium uppercase leading-[.9]">What we do.</h2>
+      </header>
 
-        <RevealGroup as="ol" className="space-y-3 lg:col-span-8" aria-label="Services">
-          {services.map((service) => (
-            <RevealItem as="li" key={service.slug}>
-              <ServiceBand
-                service={service}
-                href={linkTo === 'chapter' ? `#${service.slug}` : getServiceHref(service)}
-              />
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </Container>
-    </Section>
+      <ul className="border-b border-line">
+        {services.map((service) => {
+          const Icon = icons[service.icon]
+          return (
+            <li key={service.id}>
+              <a
+                className="group grid min-h-[6.6rem] grid-cols-[4rem_3.5rem_1fr_auto] items-center border-t border-line py-[.7rem] transition-[padding,background] duration-[250ms] hover:bg-surface hover:px-[1.2rem] mobile:min-h-[5.8rem] mobile:grid-cols-[1.6rem_2.1rem_1fr_2.25rem] mobile:gap-1 mobile:hover:px-0"
+                href={`#${service.id}`}
+              >
+                <span className="font-mono text-[.65rem] leading-[normal] text-muted">{service.number}</span>
+                <Icon className="size-[1.7rem] text-muted mobile:size-[1.35rem]" strokeWidth={1.4} aria-hidden="true" />
+                <strong className="font-display text-[clamp(1.8rem,3.3vw,3.4rem)] font-medium uppercase leading-none mobile:text-[1.8rem]">
+                  {service.title}
+                </strong>
+                <span
+                  className="grid size-[2.8rem] place-items-center rounded-full border border-line text-[1.6rem] transition-transform duration-[250ms] group-hover:rotate-45 mobile:size-[2.25rem]"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 }

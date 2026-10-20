@@ -1,108 +1,62 @@
 import type { Config } from 'tailwindcss'
-import plugin from 'tailwindcss/plugin'
 
-// Colours live as RGB channels in globals.css so opacity modifiers work (bg-signal/20).
-const rgb = (name: string) => `rgb(var(--${name}-rgb) / <alpha-value>)`
+// Colours are RGB channels in globals.css so opacity modifiers work (bg-navy/[.87]).
+const rgb = (name: string) => `rgb(var(--pm-${name}-rgb) / <alpha-value>)`
+const navy = (alpha = 1) => `rgb(var(--pm-navy-rgb) / ${alpha})`
+const surface = (alpha = 1) => `rgb(var(--pm-surface-rgb) / ${alpha})`
+const silver = 'rgb(var(--pm-silver-rgb))'
 
 const config: Config = {
-  content: ['./src/**/*.{ts,tsx,mdx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
+    // The approved design is built on max-width breakpoints, so these replace Tailwind's defaults.
+    // Order matters: later screens win, so they run largest to smallest.
+    screens: {
+      laptop: { max: '1100px' },
+      tablet: { max: '900px' },
+      compact: { max: '860px' },
+      mobile: { max: '700px' },
+      short: { raw: '(min-width: 701px) and (max-height: 800px)' },
+    },
     extend: {
       colors: {
-        canvas: rgb('canvas'),
+        navy: rgb('navy'),
         surface: rgb('surface'),
-        raised: rgb('raised'),
+        accent: rgb('accent'),
         ink: rgb('ink'),
-        muted: rgb('muted'),
         silver: rgb('silver'),
-        signal: {
-          DEFAULT: rgb('signal'),
-          bright: rgb('signal-bright'),
-        },
-        line: {
-          DEFAULT: 'rgb(var(--ink-rgb) / 0.12)',
-          strong: 'rgb(var(--ink-rgb) / 0.24)',
-        },
+        // Plain variables: the silver service section redefines them for everything inside it.
+        muted: 'var(--pm-muted)',
+        line: 'var(--pm-line)',
+      },
+      borderColor: {
+        DEFAULT: 'var(--pm-line)',
       },
       fontFamily: {
-        sans: ['var(--font-outfit)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-barlow)', '"Arial Narrow"', 'ui-sans-serif', 'sans-serif'],
-        mono: ['var(--font-plex-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-      },
-      // Keep in sync with the font-size list in src/lib/utils.ts.
-      fontSize: {
-        label: ['0.6875rem', { lineHeight: '1.4', letterSpacing: '0.14em' }],
-        small: ['0.875rem', { lineHeight: '1.55' }],
-        body: ['1rem', { lineHeight: '1.65' }],
-        lead: ['clamp(1.0625rem, 0.95rem + 0.45vw, 1.3125rem)', { lineHeight: '1.55' }],
-        title: ['clamp(1.375rem, 1.1rem + 1vw, 2.125rem)', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
-        statement: ['clamp(2rem, 1.2rem + 3.2vw, 4.25rem)', { lineHeight: '1.04', letterSpacing: '-0.035em' }],
-        'display-md': ['clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem)', { lineHeight: '0.9', letterSpacing: '-0.01em' }],
-        'display-lg': ['clamp(2.75rem, 1.4rem + 4.4vw, 6.25rem)', { lineHeight: '0.88', letterSpacing: '-0.015em' }],
-        'display-xl': ['clamp(3.25rem, 1rem + 6.6vw, 8.5rem)', { lineHeight: '0.86', letterSpacing: '-0.02em' }],
-      },
-      maxWidth: {
-        shell: '1600px',
+        display: ['var(--font-barlow)', '"Arial Narrow"', 'sans-serif'],
+        sans: ['var(--font-outfit)', 'sans-serif'],
+        mono: ['var(--font-plex-mono)', 'monospace'],
       },
       spacing: {
-        nav: 'var(--nav-offset)',
-        gutter: 'var(--gutter)',
+        gutter: 'var(--pm-gutter)',
       },
       transitionTimingFunction: {
-        brand: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        DEFAULT: 'ease',
       },
-      keyframes: {
-        ticker: {
-          from: { transform: 'translate3d(0, 0, 0)' },
-          to: { transform: 'translate3d(-50%, 0, 0)' },
-        },
-        pulse_ring: {
-          '0%': { transform: 'scale(0.35)', opacity: '0.9' },
-          '100%': { transform: 'scale(1)', opacity: '0' },
-        },
-        signal_travel: {
-          '0%': { transform: 'translateX(-10%)', opacity: '0' },
-          '15%, 85%': { opacity: '1' },
-          '100%': { transform: 'translateX(110%)', opacity: '0' },
-        },
-        blink: {
-          '0%, 55%': { opacity: '1' },
-          '56%, 100%': { opacity: '0.25' },
-        },
-        scan: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(100%)' },
-        },
-        progress: {
-          from: { transform: 'scaleX(0)' },
-          to: { transform: 'scaleX(1)' },
-        },
-      },
-      animation: {
-        ticker: 'ticker var(--ticker-duration, 48s) linear infinite',
-        'pulse-ring': 'pulse_ring 3.2s cubic-bezier(0.22, 1, 0.36, 1) infinite',
-        'signal-travel': 'signal_travel 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite',
-        blink: 'blink 1.6s steps(1) infinite',
-        scan: 'scan 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite',
-        progress: 'progress var(--progress-duration, 7s) linear forwards',
+      backgroundImage: {
+        'stage-fade': `linear-gradient(90deg, ${navy(0.5)}, transparent 75%), linear-gradient(0deg, ${navy()}, transparent 30%)`,
+        'stage-fade-mobile': `linear-gradient(0deg, ${navy(0.92)}, ${navy(0.3)} 65%, transparent)`,
+        'about-fade': `linear-gradient(90deg, ${navy(0.6)}, ${navy(0.35)})`,
+        'proof-fade': `linear-gradient(180deg, ${navy(0.36)}, ${navy(0.12)} 55%, ${navy(0.38)})`,
+        'image-card-fade': `linear-gradient(0deg, transparent, ${navy(0.35)})`,
+        'chapter-fade': `linear-gradient(90deg, ${navy(0.58)} 0%, ${navy(0.62)} 35%, ${navy()} 61%)`,
+        'chapter-fade-silver': `linear-gradient(90deg, ${navy(0.55)}, ${navy(0.65)} 35%, ${silver} 61%)`,
+        'chapter-fade-surface': `linear-gradient(90deg, ${surface(0.55)}, ${surface(0.6)} 35%, ${surface()} 61%)`,
+        'chapter-fade-mobile': `linear-gradient(180deg, ${navy(0.6)}, ${navy(0.7)} 18rem, ${navy()} 28rem)`,
+        'chapter-fade-silver-mobile': `linear-gradient(180deg, ${navy(0.7)}, ${navy(0.7)} 19rem, ${silver} 28rem)`,
       },
     },
   },
-  plugins: [
-    require('tailwindcss-animate'),
-    // Clipped corners. Size with [--notch:2rem].
-    plugin(({ addUtilities }) => {
-      const n = 'var(--notch, 1.25rem)'
-      addUtilities({
-        '.notch': {
-          'clip-path': `polygon(0 0, calc(100% - ${n}) 0, 100% ${n}, 100% 100%, 0 100%)`,
-        },
-        '.bevel': {
-          'clip-path': `polygon(${n} 0, calc(100% - ${n}) 0, 100% ${n}, 100% calc(100% - ${n}), calc(100% - ${n}) 100%, ${n} 100%, 0 calc(100% - ${n}), 0 ${n})`,
-        },
-      })
-    }),
-  ],
 }
 
 export default config

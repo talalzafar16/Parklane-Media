@@ -4,16 +4,17 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [360, 640, 768, 1024, 1280, 1536, 1920],
-    imageSizes: [64, 96, 128, 256, 384],
   },
-  // Old URLs: six capabilities became five services, and the empty Insights section was removed.
+  // The site is a single page now; old page URLs land on their section.
   async redirects() {
+    const redirect = (path, destination) => ({ source: `${path}/:slug*`, destination, permanent: true })
     return [
-      { source: '/capabilities', destination: '/services', permanent: true },
-      { source: '/capabilities/:slug*', destination: '/services', permanent: true },
-      { source: '/insights', destination: '/', permanent: true },
-      { source: '/insights/:slug*', destination: '/', permanent: true },
+      redirect('/about', '/#about'),
+      redirect('/contact', '/#contact'),
+      redirect('/services', '/#services'),
+      redirect('/capabilities', '/#services'),
+      redirect('/work', '/#work'),
+      redirect('/insights', '/'),
     ]
   },
   async headers() {
